@@ -17,6 +17,9 @@ import joblib
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
@@ -146,3 +149,35 @@ print("\nSaving Neural Network...")
 model.save(MODEL_PATH)
 
 print(f"Model saved to: {MODEL_PATH}")
+
+# -----------------------------
+# Save training curves and metrics
+# -----------------------------
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4))
+
+ax1.plot(history.history["accuracy"], label="train")
+ax1.plot(history.history["val_accuracy"], label="validation")
+ax1.set_title("Accuracy")
+ax1.set_xlabel("Epoch")
+ax1.set_ylabel("Accuracy")
+ax1.legend()
+
+ax2.plot(history.history["loss"], label="train")
+ax2.plot(history.history["val_loss"], label="validation")
+ax2.set_title("Loss")
+ax2.set_xlabel("Epoch")
+ax2.set_ylabel("Loss")
+ax2.legend()
+
+fig.suptitle(f"Neural Network Training (Test Accuracy: {accuracy*100:.2f}%)")
+fig.tight_layout()
+fig.savefig("results/plots/neural_network_training_history.png", dpi=150)
+plt.close(fig)
+
+with open("results/metrics/neural_network_metrics.txt", "w") as f:
+    f.write(f"Test Accuracy: {accuracy*100:.2f}%\n")
+    f.write(f"Test Loss    : {loss:.4f}\n")
+    f.write(f"Epochs Trained: {len(history.history['loss'])}\n")
+
+print("\nSaved training curves and metrics to results/")
