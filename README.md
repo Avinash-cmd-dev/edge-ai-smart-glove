@@ -23,7 +23,7 @@ The project processes accelerometer and gyroscope data, extracts statistical fea
 - TensorFlow Lite conversion
 - INT8 Quantization for TinyML
 - Live gesture prediction (simulation)
-- Deployment-ready architecture for ESP32
+- Real-time on-device inference on ESP32 + MPU6050 (TensorFlow Lite Micro)
 
 ---
 
@@ -92,7 +92,7 @@ INT8 Quantization
 Live Prediction
         │
         ▼
-ESP32 Deployment (Next Phase)
+ESP32 Deployment (firmware/)
 ```
 
 ---
@@ -183,10 +183,16 @@ python src/live_predict.py
 
 ---
 
+## 🔌 Firmware (ESP32 + MPU6050)
+
+The `firmware/` directory contains a PlatformIO project that runs the INT8
+model directly on an ESP32 using TensorFlow Lite Micro: it samples the
+MPU6050 over I2C, reproduces the 30-feature extraction from `src/` on-device,
+and prints the predicted gesture and confidence over serial. See
+[firmware/README.md](firmware/README.md) for wiring and build instructions.
+
 ## 🔮 Future Work
 
-- Deploy the INT8 TensorFlow Lite model on ESP32
-- Integrate MPU6050 sensor for real-time inference
 - Optimize inference latency
 - Add Bluetooth gesture streaming
 - Develop a wearable smart glove prototype
